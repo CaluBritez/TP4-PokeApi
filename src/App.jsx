@@ -3,6 +3,7 @@ import './App.css'
 
 function App() {
   const [pokemones, setPokemones] = useState([])
+  const [visible, setVisible] = useState(true)
 
   useEffect (()=>{
     const getPokemones = async() =>{
@@ -10,7 +11,6 @@ function App() {
       const listaPokemones = await response.json()
       const {results} = listaPokemones
 
-      setPokemones(results)
       const pokemon = results.map(async (pokemon) =>{
         const dataPokemon = await fetch(pokemon.url)
         const poke = await dataPokemon.json()
@@ -20,24 +20,31 @@ function App() {
           img: poke.sprites.other.dream_world.front_default
         }
       })
-      console.log(pokemon);
-      
-      
+      setPokemones(await Promise.all(pokemon))
     }
-
     getPokemones()
   }
 
   ,[])
+
+  const ver = ()=>{
+    setVisible(!visible)
+  }
+  
 
   return (
     <>
       <div>
         <h1>PokeApi</h1>
         {
-          pokemones.map(pokemon => 
-            <p> {pokemon.name} </p> 
-
+          pokemones.map(pokemon => {
+            return(
+              <div key={pokemon.id}>
+                <p> {pokemon.name} </p>
+                <img src={pokemon.img} alt="" />
+                <button onClick={ver}>Elminar</button>
+              </div>
+            )}
           )
         }
       </div>
