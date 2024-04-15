@@ -39,7 +39,7 @@ function App() {
         {
           pokemones.map(pokemon => {
             return(
-              <div key={pokemon.id}>
+              <div key={pokemon.id} className={visible ? "visible" : "invisible"}>
                 <p> {pokemon.name} </p>
                 <img src={pokemon.img} alt="" />
                 <button onClick={ver}>Elminar</button>
