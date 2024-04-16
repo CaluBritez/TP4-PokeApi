@@ -3,7 +3,7 @@ import './App.css'
 
 function App() {
   const [pokemones, setPokemones] = useState([])
-  const [visible, setVisible] = useState(true)
+  const [visibilidad, setVisibilidad] = useState([]);
 
   useEffect (()=>{
     const getPokemones = async() =>{
@@ -21,15 +21,20 @@ function App() {
         }
       })
       setPokemones(await Promise.all(pokemon))
+      setVisibilidad(Array(pokemon.length).fill(true)); // Inicializa el array de visibilidades con true
     }
     getPokemones()
   }
 
   ,[])
 
-  const ver = ()=>{
-    setVisible(!visible)
-  }
+  const toggleVisibilidad = (index) => {
+    setVisibilidad(prevVisibilidad => {
+      const newVisibilidad = [...prevVisibilidad];
+      newVisibilidad[index] = !newVisibilidad[index]; // Cambia la visibilidad del elemento en el índice dado
+      return newVisibilidad;
+    });
+  };
   
 
   return (
@@ -39,10 +44,10 @@ function App() {
         {
           pokemones.map(pokemon => {
             return(
-              <div key={pokemon.id} className={visible ? "visible" : "invisible"}>
-                <p> {pokemon.name} </p>
+              <div key={pokemon.id} className={visibilidad[pokemon.id-1] ? "visible" : "invisible"}>
+                <p> {pokemon.name.toUpperCase()} </p>
                 <img src={pokemon.img} alt="" />
-                <button onClick={ver}>Elminar</button>
+                <button onClick={() => toggleVisibilidad(pokemon.id-1)}>Eliminar</button>
               </div>
             )}
           )
